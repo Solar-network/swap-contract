@@ -84,19 +84,13 @@ contract SxpSwap is Ownable {
 
     Transfer[] transfers;
 
-    bool private locked;
-    address private swipe_address = 0x3DD5CfbC967593E8D7C7f391F131E44c0A8a6892;
+    address private constant swipe_address = 0x3DD5CfbC967593E8D7C7f391F131E44c0A8a6892;
     event Swap(address _from, string _to, uint256 _amount);
     // Getters
 
     function getMessages(uint256 _index) view external returns(address, address, uint256, string memory) {
         Transfer memory selectedTransfer = transfers[_index];
         return (selectedTransfer.sender, selectedTransfer.token, selectedTransfer.amount, selectedTransfer.message);
-    }
-
-
-    function isLocked() view external returns(bool) {
-        return locked;
     }
 
     // Validation for Solar address format
@@ -122,7 +116,6 @@ contract SxpSwap is Ownable {
     // Swap function
     
     function swapSXP(uint256 _amount, string memory _message) external {
-        require(!locked, "Swap is locked!");
         require(isSolarAddress(_message), "This is not a Solar address!");
         Transfer memory newTransfer = Transfer(msg.sender, swipe_address, _amount, _message);
 
@@ -133,17 +126,4 @@ contract SxpSwap is Ownable {
         emit Swap(msg.sender,_message,_amount);
     }
 
-    // Lock functions
-
-    function lockSwap() external onlyOwner() {
-        require(!locked, "Swap is already locked!");
-
-        locked = true;
-    }
-
-    function unlockSwap() external onlyOwner() {
-        require(locked, "Swap is already unlocked!");
-
-        locked = false;
-    }
 }
