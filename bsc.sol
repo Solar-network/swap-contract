@@ -98,7 +98,7 @@ contract SxpSwap is Ownable {
     function isSolarAddress(string memory str) internal pure returns (bool){
         bytes memory b = bytes(str);
         if(b.length != 34) return false;
-        if (b[0] != 0x44) return false;
+        if (b[0] != 0x53) return false;
         for(uint i; i<b.length; i++){
             bytes1 char = b[i];
 
